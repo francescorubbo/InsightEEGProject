@@ -10,9 +10,15 @@ from scipy.interpolate import griddata
 
 from PIL import Image,ImageOps
 
+import argparse
+parser = argparse.ArgumentParser(description='Process subject.')
+parser.add_argument('subject',type=int,default=1)
+args = parser.parse_args()
+
 tmin, tmax = -1., 4.
 event_id = dict(hands=2, feet=3)
-subject = 1
+
+subject = args.subject
 runs = [6, 10, 14]  # motor imagery: hands vs feet
 
 raw_fnames = eegbci.load_data(subject, runs)
@@ -36,7 +42,7 @@ picks = pick_types(raw.info, meg=False, eeg=True, stim=False, eog=False,
 epochs = Epochs(raw, events, event_id, tmin, tmax, proj=True, picks=picks,
                 baseline=None, preload=True)
 
-from utils import getimages
+from ImgUtils import getimages
 
 layout = read_layout('EEG1005')
 images = getimages(epochs,layout)
